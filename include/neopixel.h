@@ -27,7 +27,7 @@ public:
 
 	int 	SetPin			(int input);
 	int 	SetLength	 	(int input);
-	int 	SetColours 		(uint8_t *buf);
+	int 	SetColours 		(int *buf);
 
 
 

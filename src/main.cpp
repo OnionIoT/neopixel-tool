@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 
 	int 		pin	= -1;
 	int 		length 	= -1;
-	uint8_t		*buffer;
+	int 		*buffer;
 	onionNeopixel*	neopixelObj	= new onionNeopixel;
 
 	// save the program name
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 	length 	= 2;
 	neopixelObj->SetLength(length);
 
-	buffer 	= new uint8_t[length*3];
+	buffer 	= new int[length*3];
 	buffer[0] 	= 0x00;
 	buffer[1] 	= 0x00;
 	buffer[2] 	= 0xff;
