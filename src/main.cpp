@@ -149,16 +149,20 @@ int main(int argc, char* argv[])
 	}
 	else if (cmdId == NEOPIXEL_APP_CMD_ID_PIXEL) {
 		onionPrint(ONION_SEVERITY_INFO, "> Setting pixel %d to 0x%02x%02x%02x\n",  pixelId, red, green, blue);
-		neopixelObj->SetPixel(pixelId, red, green, blue);
+		status 	= neopixelObj->SetPixel(pixelId, red, green, blue);
 	}
 	else if (cmdId == NEOPIXEL_APP_CMD_ID_BUFFER) {
 		onionPrint(ONION_SEVERITY_INFO, "> Writing buffer to strip\n");
-		neopixelObj->SetBuffer(buffer, length);
-	} 	
+		status 	= neopixelObj->SetBuffer(buffer, length);
+	} 
+
+	if (status == EXIT_FAILURE) {
+		onionPrint(ONION_SEVERITY_INFO, "> Operation failed!\n");
+	}
 
 	if (showPixels == 1) {
 		onionPrint(ONION_SEVERITY_INFO, "> Displaying pixels on strip\n");
-		neopixelObj->ShowPixels();
+		status 	= neopixelObj->ShowPixels();
 	}
 
 

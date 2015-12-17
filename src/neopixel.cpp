@@ -63,23 +63,63 @@ int onionNeopixel::SetLength (int input)
 
 int onionNeopixel::SetBuffer (int *buf, int size)
 {
-	int 	status, i, overhead;
+	int 	status, i, overhead, bufferSize, startIndex;
 	uint8_t	*buffer;
 
 	onionPrint(ONION_SEVERITY_INFO, "> Sending colour buffer of length %d\n", size);
 
-	// adjust buffer size
-	overhead	= 3; 	// 3 bytes of overhead (addr, number of pixels being sent, starting address to write the buffer)
+	// check input size
+	if (size % 3 != 0) {
+		// need three bytes for each pixe;
+		return EXIT_FAILURE;
+	}
+
+	// defaults
+	overhead	= 3; 			// 3 bytes of overhead (addr, number of pixels being sent, starting pixel address to write the buffer)
+	startIndex	= 0;
+	
+
+	// write the buffer via i2c
+	//	note: maximum transmission size is 32 bytes, 
+	//		so if buffer is for more than 9 pixels, will need multiple transmissions
+	while (size > 0) {
+		// find transmission size
+		if (size/3 > NEOPIXEL_MAX_TRANSMISSION_PIXELS ) {
+			bufferSize 	= NEOPIXEL_MAX_TRANSMISSION_PIXELS*3 + overhead;
+			//onionPrint(ONION_SEVERITY_DEBUG_EXTRA, ">>> Transmitting maximum number of pixels, remaining size is %d\n", size);
+		}
+		else {
+			bufferSize 	= size + overhead;
+		}
+
+		// perform the transmission
+		_WriteBuffer(bufferSize, overhead, startIndex, buf);
+
+		// adjust the overall size of the input buffer based on this transmission
+		size 		-= bufferSize - overhead;
+		// adjust the next starting index 
+		//	always increment by max number of pixels (loop will only run again if max pixels are being sent)
+		startIndex	+= NEOPIXEL_MAX_TRANSMISSION_PIXELS;
+	}
+
+
+	return status;
+}
+
+int onionNeopixel::_WriteBuffer(int size, int numPixels, int startIndex, int* inputBuffer)
+{
+	int 	status, i;
+	uint8_t	*buffer;
 
 	// create a buffer for the i2c write
-	buffer 	= new uint8_t[size+overhead];
+	buffer 	= new uint8_t[size];
 
 	// populate the buffer
 	buffer[0] 	= ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA;	// i2c register address
-	buffer[1]	= size/3;			// number of pixels being sent
-	buffer[2]	= 0;				// starting index of pixel
+	buffer[1]	= numPixels;			// number of pixels being sent
+	buffer[2]	= startIndex;			// starting index of pixel
 	for (i = 0; i < size; i++) {
-		buffer[i+3]	= (uint8_t)(buf[i]);
+		buffer[i+3]	= (uint8_t)(inputBuffer[i+startIndex*3]);
 	}
 
 
@@ -88,9 +128,8 @@ int onionNeopixel::SetBuffer (int *buf, int size)
 			 					devAddr, 
 			 					ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA, 
 			 					buffer, 
-			 					size+overhead
+			 					size
 			 				);
-
 
 	return status;
 }

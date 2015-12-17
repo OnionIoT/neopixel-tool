@@ -18,6 +18,8 @@
 #define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATAPOINT	(0x23)
 #define ARDUINO_DOCK_ADDR_SHOW_NEOPIXEL				(0x24)
 
+#define NEOPIXEL_MAX_TRANSMISSION_PIXELS			9
+
 
 
 class onionNeopixel : public Module {
@@ -38,6 +40,7 @@ public:
 
 private:
 	// private functions
+	int 	_WriteBuffer	(int size, int overhead, int numPixels, int* inputBuffer);
 
 
 	// private members
