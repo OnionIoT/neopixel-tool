@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	if (cmdId == -1) {
+	if (cmdId == -1 && showPixels == 0) {
 		usage(progname);
 		return EXIT_FAILURE;
 	}
