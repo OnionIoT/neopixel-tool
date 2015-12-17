@@ -74,7 +74,7 @@ int onionNeopixel::SetColours (uint8_t *buf)
 	// send the I2C command
 	status	= i2c_writeBuffer(	NEOPIXEL_I2C_DEVICE_NUM,
 			 					devAddr, 
-			 					ARDUINO_DOCK_ADDR_SET_NEOPIXEL_STRIP_LENGTH, 
+			 					ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA, 
 			 					buf, 
 			 					size
 			 				);
