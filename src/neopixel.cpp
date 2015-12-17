@@ -100,7 +100,7 @@ int onionNeopixel::SetPixel (int pixelId, int red, int green, int blue)
 	buffer 	= new uint8_t[5];
 
 	// populate the buffer
-	buffer[0] 	= ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA;	// i2c register address
+	buffer[0] 	= ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATAPOINT;	// i2c register address
 	buffer[1]	= pixelId;	// pixel id
 	buffer[2]	= red;		// r data
 	buffer[3]	= green;	// g data
