@@ -61,20 +61,25 @@ int onionNeopixel::SetLength (int input)
 	return status;
 }
 
-int onionNeopixel::SetColours (int *buf, int size)
+int onionNeopixel::SetBuffer (int *buf, int size)
 {
-	int 	status, i;
+	int 	status, i, overhead;
 	uint8_t	*buffer;
 
 	onionPrint(ONION_SEVERITY_INFO, "> Sending colour buffer of length %d\n", size);
 
+	// adjust buffer size
+	overhead	= 3; 	// 3 bytes of overhead (addr, number of pixels being sent, starting address to write the buffer)
+
 	// create a buffer for the i2c write
-	buffer 	= new uint8_t[size+1];
+	buffer 	= new uint8_t[size+overhead];
 
 	// populate the buffer
 	buffer[0] 	= ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA;	// i2c register address
+	buffer[1]	= size/3;			// number of pixels being sent
+	buffer[2]	= 0;				// starting index of pixel
 	for (i = 0; i < size; i++) {
-		buffer[i+1]	= (uint8_t)(buf[i]);
+		buffer[i+3]	= (uint8_t)(buf[i]);
 	}
 
 
@@ -83,7 +88,7 @@ int onionNeopixel::SetColours (int *buf, int size)
 			 					devAddr, 
 			 					ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA, 
 			 					buffer, 
-			 					size+1
+			 					size+overhead
 			 				);
 
 

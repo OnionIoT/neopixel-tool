@@ -30,8 +30,8 @@ public:
 	int 	SetPin			(int input);
 	int 	SetLength	 	(int input);
 	
-	int 	SetColours 		(int *buf, int size);
 	int 	SetPixel 		(int pixelId, int red, int green, int blue);
+	int 	SetBuffer 		(int *buf, int size);
 
 	int 	ShowPixels		();
 

@@ -153,7 +153,7 @@ int main(int argc, char* argv[])
 	}
 	else if (cmdId == NEOPIXEL_APP_CMD_ID_BUFFER) {
 		onionPrint(ONION_SEVERITY_INFO, "> Writing buffer to strip\n");
-		neopixelObj->SetColours(buffer, length);
+		neopixelObj->SetBuffer(buffer, length);
 	} 	
 
 	if (showPixels == 1) {
