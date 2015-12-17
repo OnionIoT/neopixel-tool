@@ -1,4 +1,4 @@
-#include <neopixel.h>
+#include <main.h>
 
 void usage(const char* progName) {
 	printf("Usage:\n");
@@ -27,10 +27,13 @@ int main(int argc, char* argv[])
 	int 		verbose, debug;
 	int 		ch;
 
-	int 		pin	= -1;
-	int 		length 	= -1;
+	char		*val	= NULL;
+	int 		cmdId, pixelId, pin, length, i;
+	int 		red, blue, green;
+
 	int 		*buffer;
 	onionNeopixel*	neopixelObj	= new onionNeopixel;
+
 
 	// save the program name
 	progname 	= argv[0];	
@@ -38,10 +41,13 @@ int main(int argc, char* argv[])
 	// set the defaults
 	verbose 	= ONION_VERBOSITY_NORMAL;
 	//debug 		= ADS1X15_MAIN_DEFAULT_DEBUG;
+	cmdId 		= -1;
+	pin 		= NEOPIXEL_APP_DEFAULT_PIN;
+	length 		= NEOPIXEL_APP_DEFAULT_LENGTH;
 
 
 	//// parse the option arguments
-	while ((ch = getopt(argc, argv, "xvqdh")) != -1) {
+	while ((ch = getopt(argc, argv, "vqdhip:l:")) != -1) {
 		switch (ch) {
 		case 'v':
 			// verbose output
@@ -55,11 +61,26 @@ int main(int argc, char* argv[])
 			// debug mode
 			debug 	= 1;
 			break;
+		case 'i':
+			// init mode
+			cmdId 	= NEOPIXEL_APP_CMD_ID_INIT;
+			break;
+		case 'p':
+			// set the pin
+			pin 	= atoi(optarg);
+			break;
+		case 'l':
+			// set the length
+			length 	= atoi(optarg);
+			break;
 		default:
 			usage(progname);
 			return 0;
 		}
 	}
+
+	// set the verbosity
+	onionSetVerbosity(verbose);
 
 	// advance past the option arguments
 	argc 	-= optind;
@@ -67,52 +88,68 @@ int main(int argc, char* argv[])
 
 	
 	//// parse the arguments
-	/*// pin argument
-	if (argc > 0) {
-		channel 	= atoi(argv[0]);
+	if (argc > 0) {		
+		val 	= new char[1024];
+		onionPrint(ONION_SEVERITY_DEBUG, ">> argument count is %d\n", argc);
 
-		if (channel < 0 || channel > ADS1X15_NUM_CHANNELS) {
-			usage(progname);
-			printf ("ERROR: invalid number of channels!\n");
-			return EXIT_FAILURE;
+		if (strcmp(NEOPIXEL_APP_CMD_PIXEL, argv[0]) == 0 ) {
+			cmdId 	= NEOPIXEL_APP_CMD_ID_PIXEL;
+
+			// read the pixelId, and colour component arguments
+			if (argc > 1) {
+				pixelId		= atoi(argv[1]);
+
+				// parse the pixels
+				sscanf(argv[2], "%2x%2x%2x", &red, &green, &blue);
+				onionPrint(ONION_SEVERITY_DEBUG, ">> Read pixel colours from %s: r = %d, g = %d, b = %d\n", argv[2], red, green, blue);
+			}
+		}
+		else if (strcmp(NEOPIXEL_APP_CMD_BUFFER, argv[0]) == 0 ) {
+			cmdId 	= NEOPIXEL_APP_CMD_ID_BUFFER;
+
+			// read the buffer
+			if (argc > 1) {
+				// find length of string buffer
+				length 	= strlen(argv[1]);
+				buffer 	= new int[length/2];	// initialize the uint8_t buffer
+				
+				// convert to uint8_t buffer
+				for (i = 0; i < length; i += 2) {
+					sscanf(argv[1] + i, "%2x", &(buffer[i/2]) );
+					onionPrint(ONION_SEVERITY_DEBUG_EXTRA, ">>> set buffer[%d] to 0x%02x\n", i/2, buffer[i/2]);
+				}
+
+				onionPrint(ONION_SEVERITY_DEBUG, ">> input string length is %d, buffer length is %d\n", length, length/2);
+				length 	/= 2;	// now represents size of int buffer
+			}
+			else {
+				onionPrint(ONION_SEVERITY_FATAL, "ERROR: Expecting argument with buffer!\n");
+				status 	= EXIT_FAILURE;
+			}
 		}
 	}
-	else {
+	
+	if (cmdId == -1) {
 		usage(progname);
 		return EXIT_FAILURE;
 	}
 
-	// gain argument
-	if (argc > 1) {
-		gain 		= adsObj->ReadMaxVoltage( atof(argv[1]) );
-		printf ("> Max input voltage %0.3f V corresponds to gain setting of %d\n", atof(argv[1]), gain);
-
-		if (gain < 0 || gain > ADS1X15_NUM_GAIN) {
-			usage(progname);
-			printf ("ERROR: invalid max input voltage!\n");
-			return EXIT_FAILURE;
-		}
-	}*/
 
 
 	//// actual program
-	onionSetVerbosity(verbose);
-
-	neopixelObj->SetPin(6);
-
-	length 	= 2;
-	neopixelObj->SetLength(length);
-
-	buffer 	= new int[length*3];
-	buffer[0] 	= 0x00;
-	buffer[1] 	= 0x00;
-	buffer[2] 	= 0xff;
-
-	buffer[3] 	= 0x00;
-	buffer[4] 	= 0xff;
-	buffer[5] 	= 0x00;
-
-	neopixelObj->SetColours(buffer);
+	if (cmdId == NEOPIXEL_APP_CMD_ID_INIT) {
+		onionPrint(ONION_SEVERITY_INFO, "> Initializing strip of length %d on pin %d\n", length, pin);
+		neopixelObj->SetPin(pin);	
+		neopixelObj->SetLength(length);
+	}
+	else if (cmdId == NEOPIXEL_APP_CMD_ID_PIXEL) {
+		onionPrint(ONION_SEVERITY_INFO, "> Setting pixel %d to 0x%02x%02x%02x\n",  pixelId, red, green, blue);
+		neopixelObj->SetPixel(pixelId, red, green, blue);
+	}
+	else if (cmdId == NEOPIXEL_APP_CMD_ID_BUFFER) {
+		onionPrint(ONION_SEVERITY_INFO, "> Writing buffer to strip\n");
+		neopixelObj->SetColours(buffer, length);
+	} 	
 
 
 	return 0;
