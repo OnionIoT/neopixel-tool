@@ -15,6 +15,8 @@
 #define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_PIN			(0x20)
 #define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_STRIP_LENGTH	(0x21)
 #define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA			(0x22)
+#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATAPOINT	(0x23)
+#define ARDUINO_DOCK_ADDR_SHOW_NEOPIXEL				(0x24)
 
 
 
@@ -27,9 +29,9 @@ public:
 
 	int 	SetPin			(int input);
 	int 	SetLength	 	(int input);
-	int 	SetColours 		(int *buf);
-
-
+	
+	int 	SetColours 		(int *buf, int size);
+	int 	SetPixel 		(int pixelId, int red, int green, int blue);
 
 
 private:

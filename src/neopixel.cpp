@@ -61,13 +61,11 @@ int onionNeopixel::SetLength (int input)
 	return status;
 }
 
-int onionNeopixel::SetColours (int *buf)
+int onionNeopixel::SetColours (int *buf, int size)
 {
-	int 	status, size, i;
+	int 	status, i;
 	uint8_t	*buffer;
 
-	// setup the buffer
-	size 	= length * 3;
 	onionPrint(ONION_SEVERITY_INFO, "> Sending colour buffer of length %d\n", size);
 
 	// create a buffer for the i2c write
@@ -88,6 +86,33 @@ int onionNeopixel::SetColours (int *buf)
 			 					size+1
 			 				);
 
+
+	return status;
+}
+
+int onionNeopixel::SetPixel (int pixelId, int red, int green, int blue)
+{
+	int 	status, size;
+	uint8_t	*buffer;
+
+	// create a buffer for the i2c write
+	size	= 5;	// addr, pixel id, 3x colours
+	buffer 	= new uint8_t[5];
+
+	// populate the buffer
+	buffer[0] 	= ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA;	// i2c register address
+	buffer[1]	= pixelId;	// pixel id
+	buffer[2]	= red;		// r data
+	buffer[3]	= green;	// g data
+	buffer[4]	= blue;		// b data
+
+	// send the I2C command
+	status	= i2c_writeBuffer(	NEOPIXEL_I2C_DEVICE_NUM,
+			 					devAddr, 
+			 					ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATAPOINT, 
+			 					buffer, 
+			 					size
+			 				);
 
 	return status;
 }
