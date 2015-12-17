@@ -116,3 +116,19 @@ int onionNeopixel::SetPixel (int pixelId, int red, int green, int blue)
 
 	return status;
 }
+
+int onionNeopixel::ShowPixels ()
+{
+	int 	status;
+
+	// send the I2C command to show the stored pixels
+	status	= i2c_writeBytes(	NEOPIXEL_I2C_DEVICE_NUM,
+			 					devAddr, 
+			 					ARDUINO_DOCK_ADDR_SHOW_NEOPIXEL, 
+			 					1, 
+			 					1
+			 				);
+
+	return status;
+}
+

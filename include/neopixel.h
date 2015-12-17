@@ -33,6 +33,8 @@ public:
 	int 	SetColours 		(int *buf, int size);
 	int 	SetPixel 		(int pixelId, int red, int green, int blue);
 
+	int 	ShowPixels		();
+
 
 private:
 	// private functions

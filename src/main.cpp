@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 	int 		ch;
 
 	char		*val	= NULL;
-	int 		cmdId, pixelId, pin, length, i;
+	int 		cmdId, pixelId, pin, length, i, showPixels;
 	int 		red, blue, green;
 
 	int 		*buffer;
@@ -42,12 +42,13 @@ int main(int argc, char* argv[])
 	verbose 	= ONION_VERBOSITY_NORMAL;
 	//debug 		= ADS1X15_MAIN_DEFAULT_DEBUG;
 	cmdId 		= -1;
+	showPixels 	= 0;
 	pin 		= NEOPIXEL_APP_DEFAULT_PIN;
 	length 		= NEOPIXEL_APP_DEFAULT_LENGTH;
 
 
 	//// parse the option arguments
-	while ((ch = getopt(argc, argv, "vqdhip:l:")) != -1) {
+	while ((ch = getopt(argc, argv, "vqdhisp:l:")) != -1) {
 		switch (ch) {
 		case 'v':
 			// verbose output
@@ -64,6 +65,10 @@ int main(int argc, char* argv[])
 		case 'i':
 			// init mode
 			cmdId 	= NEOPIXEL_APP_CMD_ID_INIT;
+			break;
+		case 's':
+			// show pixels
+			showPixels 	= 1;
 			break;
 		case 'p':
 			// set the pin
@@ -150,6 +155,11 @@ int main(int argc, char* argv[])
 		onionPrint(ONION_SEVERITY_INFO, "> Writing buffer to strip\n");
 		neopixelObj->SetColours(buffer, length);
 	} 	
+
+	if (showPixels == 1) {
+		onionPrint(ONION_SEVERITY_INFO, "> Displaying pixels on strip\n");
+		neopixelObj->ShowPixels();
+	}
 
 
 	return 0;
