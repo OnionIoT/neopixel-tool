@@ -139,6 +139,8 @@ int onionNeopixel::SetPixel (int pixelId, int red, int green, int blue)
 	int 	status, size;
 	uint8_t	*buffer;
 
+	onionPrint(ONION_SEVERITY_DEBUG, "> Setting pixel %d\n", pixelId);
+
 	// create a buffer for the i2c write
 	size	= 5;	// addr, pixel id, 3x colours
 	buffer 	= new uint8_t[5];
@@ -164,6 +166,8 @@ int onionNeopixel::SetPixel (int pixelId, int red, int green, int blue)
 int onionNeopixel::ShowPixels ()
 {
 	int 	status;
+
+	onionPrint(ONION_SEVERITY_DEBUG, "> Displaying colours on neopixels\n");
 
 	// send the I2C command to show the stored pixels
 	status	= i2c_writeBytes(	NEOPIXEL_I2C_DEVICE_NUM,
