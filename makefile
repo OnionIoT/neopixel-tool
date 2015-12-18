@@ -15,7 +15,7 @@ LIBDIR := lib
 
 # define common variables
 SRCEXT := cpp
-SOURCES := $(shell find $(SRCDIR) -maxdepth 1 -type f \( -iname "*.$(SRCEXT)" ! -iname "*main-*.$(SRCEXT)" \) )
+SOURCES := $(shell find $(SRCDIR) -maxdepth 1 -type f \( -iname "*.$(SRCEXT)" ! -iname "*main*.$(SRCEXT)" \) )
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CXXFLAGS := -g # -Wall
 
@@ -29,15 +29,28 @@ ifeq ($(UNAME_S),Darwin)
 endif
 
 # define specific binaries to create
+LIB0 := libonionneopixel
+LIB0_TARGET := $(LIBDIR)/$(LIB0).so
+
 APP0 := neopixel-tool
-TARGET := $(BINDIR)/$(APP0)
+APP0_SOURCES := src/main.cpp
+APP0_OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(APP0_SOURCES:.$(SRCEXT)=.o))
+APP0_TARGET := $(BINDIR)/$(APP0)
+APP0_LIB := $(LIB) -lonionneopixel
 
-all: bla $(TARGET)
 
-$(TARGET): $(OBJECTS)
+all: info $(LIB0_TARGET) $(APP0_TARGET)
+
+$(LIB0_TARGET): $(OBJECTS)
+	@echo " Compiling $@"
+	@mkdir -p $(LIBDIR)
+	$(CXX) -shared -o $@  $^ $(LIB)
+	@$(LIB) += -libonionneopixel
+
+$(APP0_TARGET): $(APP0_OBJECTS) 
 	@mkdir -p $(BINDIR)
 	@echo " Linking..."
-	$(CXX) $^ $(CXXFLAGS) $(LDFLAGS) -o $(TARGET) $(LIB)
+	$(CXX) $^ $(CXXFLAGS) $(LDFLAGS) -o $(APP0_TARGET) $(APP0_LIB)
 
 # generic: build any object file required
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
@@ -47,14 +60,16 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 
 clean:
 	@echo " Cleaning..."; 
-	@echo " $(RM) -r $(BUILDDIR) $(BINDIR)"; $(RM) -r $(BUILDDIR) $(BINDIR)
+	$(RM) -r $(BUILDDIR) $(BINDIR) $(LIB0_TARGET)
 
-bla:
+info:
 	@echo "CXX: $(CXX)"
 	@echo "CXXFLAGS: $(CXXFLAGS)"
 	@echo "LDFLAGS: $(LDFLAGS)"
 	@echo "LIB: $(LIB)"
 	@echo "INC: $(INC)"
+	@echo "SOURCES: $(SOURCES)"
+	@echo "OBJECTS: $(OBJECTS)"
 
 
 # Tests
