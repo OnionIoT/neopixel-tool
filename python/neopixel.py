@@ -26,8 +26,7 @@ class OnionNeopixel:
 		libneopixel.neopixelSetVerbosity(2)
 
 		# initialize the C
-		#if libneopixel.neopixelInit(self.devAddr, self.pin, self.pixels) == EXIT_SUCCESS:
-		if libneopixel.neopixelInit(self.pin, self.pixels) == EXIT_SUCCESS:
+		if libneopixel.neopixelInit(self.devAddr, self.pin, self.pixels) == EXIT_SUCCESS:
 			self.init = 1
 
 
