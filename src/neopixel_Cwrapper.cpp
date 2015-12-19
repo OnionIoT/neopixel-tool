@@ -14,12 +14,12 @@ void neopixelSetVerbosity(int verbosity)
 	onionSetVerbosity(verbosity);
 }
 
-int	neopixelInit (int pin, int length)
+int	neopixelInit (int devAddr, int pin, int length)
 {
 	int 	status;
 
 	// create the object
-	neopixel 	= new onionNeopixel();
+	neopixel 	= new onionNeopixel(devAddr);
 
 	// setup the pin and length
 	neopixel->SetPin(pin);
