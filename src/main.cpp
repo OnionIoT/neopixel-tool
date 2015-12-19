@@ -144,8 +144,8 @@ int main(int argc, char* argv[])
 	//// actual program
 	if (cmdId == NEOPIXEL_APP_CMD_ID_INIT) {
 		onionPrint(ONION_SEVERITY_INFO, "> Initializing strip of length %d on pin %d\n", length, pin);
-		neopixelObj->SetPin(pin);	
-		neopixelObj->SetLength(length);
+		status =  neopixelObj->SetPin(pin);	
+		status |= neopixelObj->SetLength(length);
 	}
 	else if (cmdId == NEOPIXEL_APP_CMD_ID_PIXEL) {
 		onionPrint(ONION_SEVERITY_INFO, "> Setting pixel %d to 0x%02x%02x%02x\n",  pixelId, red, green, blue);
