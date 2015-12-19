@@ -29,9 +29,15 @@ class OnionNeopixel:
 		if libneopixel.neopixelInit(self.devAddr, self.pin, self.pixels) == EXIT_SUCCESS:
 			self.init = 1
 
+	def __del__(self):
+		""" Destructor: Take care of all cleanup """
+		# make the C call
+		libneopixel.neopixelFree()
+
 
 	def setPixel (self, pixelId, red, green, blue):
 		""" Set a specific pixel to the specified colour pattern """
+		# check for proper initialization
 		if self.init == 0:
 			return -1
 
@@ -43,6 +49,9 @@ class OnionNeopixel:
 
 	def setBuffer (self, pyBuf):
 		""" Set a buffer of colours """
+		# check for proper initialization
+		if self.init == 0:
+			return -1
 
 		# print the contents of the python list
 		#for i in range(0, size):
@@ -77,4 +86,7 @@ class OnionNeopixel:
 			return 0
 
 		return 1
+
+	
+
 
