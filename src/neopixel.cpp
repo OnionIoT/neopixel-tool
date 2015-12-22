@@ -23,6 +23,7 @@ void onionNeopixel::Reset ()
 	buffer		= NULL;
 }
 
+// set Arduino Dock output pin for Neopixel Data 
 int onionNeopixel::SetPin (int input)
 {
 	int 	status;
@@ -42,6 +43,7 @@ int onionNeopixel::SetPin (int input)
 	return status;
 }
 
+// set length of the strip
 int onionNeopixel::SetLength (int input)
 {
 	int 	status;
@@ -55,6 +57,24 @@ int onionNeopixel::SetLength (int input)
 			 					devAddr, 
 			 					ARDUINO_DOCK_ADDR_SET_NEOPIXEL_STRIP_LENGTH, 
 			 					length, 
+			 					1
+			 				);
+
+	return status;
+}
+
+// initialize the 
+int onionNeopixel::Init ()
+{
+	int 	status;
+
+	onionPrint(ONION_SEVERITY_DEBUG, "> Initializing the neopixels\n", pin);
+
+	// send the I2C command
+	status	= i2c_writeBytes(	NEOPIXEL_I2C_DEVICE_NUM,
+			 					devAddr, 
+			 					ARDUINO_DOCK_ADDR_NEOPIXEL_INIT, 
+			 					0x01, 
 			 					1
 			 				);
 

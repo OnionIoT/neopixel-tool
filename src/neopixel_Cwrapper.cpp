@@ -24,6 +24,7 @@ int	neopixelInit (int devAddr, int pin, int length)
 	// setup the pin and length
 	neopixel->SetPin(pin);
 	neopixel->SetLength(length);
+	neopixel->Init();
 
 	return status;
 }

@@ -7,16 +7,17 @@
 #include <onion-i2c.h>
 		
 
-#define NEOPIXEL_PRINT_BANNER			"ADS1X15::"
+#define NEOPIXEL_PRINT_BANNER			"neopixel-tool::"
 
 #define NEOPIXEL_I2C_DEVICE_NUM			(0)
 #define NEOPIXEL_I2C_DEVICE_ADDR		(0x08)
 
-#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_PIN			(0x20)
-#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_STRIP_LENGTH	(0x21)
-#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA			(0x22)
-#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATAPOINT	(0x23)
-#define ARDUINO_DOCK_ADDR_SHOW_NEOPIXEL				(0x24)
+#define ARDUINO_DOCK_ADDR_NEOPIXEL_INIT				(0x20)
+#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_PIN			(0x21)
+#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_STRIP_LENGTH	(0x22)
+#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA			(0x23)
+#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATAPOINT	(0x24)
+#define ARDUINO_DOCK_ADDR_SHOW_NEOPIXEL				(0x25)
 
 #define NEOPIXEL_MAX_TRANSMISSION_PIXELS			9
 
@@ -31,6 +32,7 @@ public:
 
 	int 	SetPin			(int input);
 	int 	SetLength	 	(int input);
+	int 	Init	 		();
 	
 	int 	SetPixel 		(int pixelId, int red, int green, int blue);
 	int 	SetBuffer 		(int *buf, int size);
