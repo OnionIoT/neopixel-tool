@@ -1,20 +1,39 @@
 #include <main.h>
 
 void usage(const char* progName) {
+	printf("Utility to control Neopixels with the Arduino Dock\n");
+	printf("\n");
+
 	printf("Usage:\n");
-	printf("\t%s [-qvd] <channel> [max voltage]\n", progName);
+	printf("    %s -i -p <data pin> -l <number of neopixels>\n", progName);
+	printf("Initialize the Arduino Dock to use Neopixels\n");
+	printf("  <data pin>             Arduino Dock pin connected to Neopixel data pin\n");
+	printf("  <number of neopixels>  Total number of neopixels to be controlled\n");
 	printf("\n");
-	printf("<channel>\tAnalog input channel, can be 0 to 3\n");
-	printf("[max voltage]\tOptional: Set maximum expected input voltage\n");
-	printf("\tmax:	 6.144 V\n");
-	printf("\tmin: 	 0.256 V\n");
-	printf("\tdefault: 6.144 V\n");
-	printf("\n");
+
+	printf("Usage:\n");
+	printf("    %s [-s] set <pixel> <colour value>\n", progName);
+	printf("Set the colour value of an individual pixel\n");
+	printf("  <pixel>          Pixel number in the Neopixel strip/array\n");
+	printf("  <colour value>   Hex colour value with 8 bits for each colour component (0xRRGGBB)\n");
 	printf("Options\n");
-	printf("\t-q	Quiet: no output\n");
-	printf("\t-v	Verbose: debug output\n");
-	printf("\t-x	Extra Verbose: all debug output\n");
-	printf("\t-d	Debug: do not carry out any I2C transactions\n");
+	printf("  -s	Immediately display the colour change, otherwise it will be queued up\n");
+	printf("\n");
+
+	printf("Usage:\n");
+	printf("    %s [-s] buffer <colour value string>\n", progName);
+	printf("Set the colour value of a number of pixels\n");
+	printf("  <colour value string>  Colour values of each pixel\n");
+	printf("     ex:  010203040506 will set pixel 0 to 0x010203 and pixel 1 to 0x040506\n");
+	printf("Options\n");
+	printf("  -s	Immediately display the colour change, otherwise it will be queued up\n");
+	printf("\n");
+
+	printf("Usage:\n");
+	printf("    %s -s\n", progName);
+	printf("Display any queued colour changes\n");
+	printf("\n");
+
 	printf("\n");
 }
 
@@ -116,9 +135,9 @@ int main(int argc, char* argv[])
 			if (argc > 1) {
 				// find length of string buffer
 				length 	= strlen(argv[1]);
-				buffer 	= new int[length/2];	// initialize the uint8_t buffer
+				buffer 	= new int[length/2];	// initialize the int buffer
 				
-				// convert to uint8_t buffer
+				// convert to int buffer
 				for (i = 0; i < length; i += 2) {
 					sscanf(argv[1] + i, "%2x", &(buffer[i/2]) );
 					onionPrint(ONION_SEVERITY_DEBUG_EXTRA, ">>> set buffer[%d] to 0x%02x\n", i/2, buffer[i/2]);
