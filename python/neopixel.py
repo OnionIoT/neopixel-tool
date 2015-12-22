@@ -1,5 +1,4 @@
 from ctypes import *
-from array import array
 
 libneopixel = CDLL("libonionneopixel.so") 
 
