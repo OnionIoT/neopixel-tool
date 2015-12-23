@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 	int 		red, blue, green;
 
 	int 		*buffer;
-	onionNeopixel*	neopixelObj	= new onionNeopixel;
+	onionNeopixel*	neopixelObj	= new onionNeopixel();
 
 
 	// save the program name

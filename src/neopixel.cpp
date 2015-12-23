@@ -63,7 +63,7 @@ int onionNeopixel::SetLength (int input)
 	return status;
 }
 
-// initialize the 
+// initialize the neopixel display
 int onionNeopixel::Init ()
 {
 	int 	status;
@@ -77,6 +77,18 @@ int onionNeopixel::Init ()
 			 					0x01, 
 			 					1
 			 				);
+
+	return status;
+}
+
+// overloaded function that takes in the pin, length, and performs the init
+int onionNeopixel::Init (int pin, int length)
+{
+	int 	status;
+
+	status 	=  SetPin(pin);
+	status 	|= SetLength(length);
+	status	|= Init();
 
 	return status;
 }
