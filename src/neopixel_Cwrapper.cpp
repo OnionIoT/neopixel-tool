@@ -80,6 +80,7 @@ int	neopixelShowPixels ()
 void neopixelFree () 
 {
 	if (neopixel != NULL) {
+		neopixel->CleanUp();
 		delete neopixel;
 	}
 }

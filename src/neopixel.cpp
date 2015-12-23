@@ -222,6 +222,7 @@ int onionNeopixel::SetPixel (int pixelId, int red, int green, int blue)
 	return status;
 }
 
+// send show pixels command to Arduino Dock
 int onionNeopixel::ShowPixels ()
 {
 	int 	status;
@@ -232,6 +233,24 @@ int onionNeopixel::ShowPixels ()
 	status	= i2c_writeBytes(	NEOPIXEL_I2C_DEVICE_NUM,
 			 					devAddr, 
 			 					ARDUINO_DOCK_ADDR_SHOW_NEOPIXEL, 
+			 					1, 
+			 					1
+			 				);
+
+	return status;
+}
+
+// send delete Neopixel object command to Arduino Dock
+int onionNeopixel::CleanUp ()
+{
+	int 	status;
+
+	onionPrint(ONION_SEVERITY_DEBUG, "> Deleting Neopixel object on Arduino Dock\n");
+
+	// send the I2C command to show the stored pixels
+	status	= i2c_writeBytes(	NEOPIXEL_I2C_DEVICE_NUM,
+			 					devAddr, 
+			 					ARDUINO_DOCK_ADDR_DELETE_NEOPIXEL, 
 			 					1, 
 			 					1
 			 				);
