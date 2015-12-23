@@ -15,6 +15,7 @@
 #define ARDUINO_DOCK_ADDR_NEOPIXEL_INIT				(0x20)
 #define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_PIN			(0x21)
 #define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_STRIP_LENGTH	(0x22)
+#define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_BRIGHTNESS	(0x26)
 #define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATA			(0x23)
 #define ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATAPOINT	(0x24)
 #define ARDUINO_DOCK_ADDR_SHOW_NEOPIXEL				(0x25)
@@ -34,6 +35,8 @@ public:
 	int 	SetLength	 	(int input);
 	int 	Init	 		();
 	int 	Init	 		(int pin, int length);
+
+	int 	SetBrightness 	(int input);
 	
 	int 	SetPixel 		(int pixelId, int red, int green, int blue);
 	int 	SetBuffer 		(int *buf, int size);
@@ -50,6 +53,7 @@ private:
 	int 	devAddr;
 	int 	pin;
 	int 	length;
+	int 	brightness;
 	int* 	buffer;
 };
 

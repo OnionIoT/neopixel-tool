@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 	int 		verbose, debug;
 	int 		ch;
 
-	int 		cmdId, pixelId, pin, length, i, showPixels;
+	int 		cmdId, pixelId, pin, length, brightness, i, showPixels;
 	int 		red, blue, green;
 
 	int 		*buffer;
@@ -58,15 +58,16 @@ int main(int argc, char* argv[])
 
 	// set the defaults
 	verbose 	= ONION_VERBOSITY_NORMAL;
-	//debug 		= ADS1X15_MAIN_DEFAULT_DEBUG;
+	debug 		= 0;
 	cmdId 		= -1;
 	showPixels 	= 0;
 	pin 		= NEOPIXEL_APP_DEFAULT_PIN;
 	length 		= NEOPIXEL_APP_DEFAULT_LENGTH;
+	brightness 	= -1;
 
 
 	//// parse the option arguments
-	while ((ch = getopt(argc, argv, "vqdhisp:l:")) != -1) {
+	while ((ch = getopt(argc, argv, "vqdhisp:l:b:")) != -1) {
 		switch (ch) {
 		case 'v':
 			// verbose output
@@ -95,6 +96,10 @@ int main(int argc, char* argv[])
 		case 'l':
 			// set the length
 			length 	= atoi(optarg);
+			break;
+		case 'b':
+			// set the brightness
+			brightness 	= atoi(optarg);
 			break;
 		default:
 			usage(progname);
@@ -151,7 +156,7 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	if (cmdId == -1 && showPixels == 0) {
+	if (cmdId == -1 && showPixels == 0 && brightness <= 0) {
 		usage(progname);
 		return EXIT_FAILURE;
 	}
@@ -175,10 +180,17 @@ int main(int argc, char* argv[])
 		delete buffer;	// clean-up
 	} 
 
+	// error checking
 	if (status == EXIT_FAILURE) {
 		onionPrint(ONION_SEVERITY_INFO, "> Operation failed!\n");
 	}
 
+
+	// brightness setup
+	if (brightness > 0) {
+		status 	= neopixelObj->SetBrightness(brightness);
+	}
+	// send show pixel command
 	if (showPixels == 1) {
 		onionPrint(ONION_SEVERITY_INFO, "> Displaying pixels on strip\n");
 		status 	= neopixelObj->ShowPixels();

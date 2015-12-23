@@ -19,6 +19,7 @@ void onionNeopixel::Reset ()
 	devAddr 	= NEOPIXEL_I2C_DEVICE_ADDR;
 	pin 		= 6;
 	length 		= -1;
+	brightness 	= 0xff;
 
 	buffer		= NULL;
 }
@@ -89,6 +90,26 @@ int onionNeopixel::Init (int pin, int length)
 	status 	=  SetPin(pin);
 	status 	|= SetLength(length);
 	status	|= Init();
+
+	return status;
+}
+
+// set the maximum brightness
+int onionNeopixel::SetBrightness (int input)
+{
+	int 	status;
+
+	// save the brightness
+	brightness 	= input;
+	onionPrint(ONION_SEVERITY_INFO, "> Setting brightness to %d\n", brightness);
+
+	// send the I2C command
+	status	= i2c_writeBytes(	NEOPIXEL_I2C_DEVICE_NUM,
+			 					devAddr, 
+			 					ARDUINO_DOCK_ADDR_SET_NEOPIXEL_BRIGHTNESS, 
+			 					brightness, 
+			 					1
+			 				);
 
 	return status;
 }

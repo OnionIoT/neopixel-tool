@@ -11,11 +11,12 @@ import time
 import math	
 
 # setup the neopixel class
-NEOPIXEL_PIN 	= 6
-NEOPIXEL_NUMBER	= 64
+NEOPIXEL_PIN 			= 6
+NEOPIXEL_NUMBER			= 64
+NEOPIXEL_BRIGHTNESS 	= 0x7f
 
 npixel 	= neopixel.OnionNeopixel(NEOPIXEL_PIN, NEOPIXEL_NUMBER)
-
+ret 	= npixel.setBrightness(NEOPIXEL_BRIGHTNESS)
 
 # other functions
 NUM_COLOURS 	= 7

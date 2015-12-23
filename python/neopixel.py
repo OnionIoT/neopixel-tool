@@ -19,6 +19,7 @@ class OnionNeopixel:
 
 		self.pin 			= pin
 		self.pixels 		= length
+		self.brightness 	= 0xff
 
 		self.init 			= 0
 
@@ -36,6 +37,11 @@ class OnionNeopixel:
 	def setVerbosity(self, verbosity):
 		""" Set the Onion Debug verbosity """
 		libneopixel.neopixelSetVerbosity(verbosity)
+
+	def setBrightness(self, brightness):
+		""" Set the Neopixel maximum brightness """
+		self.brightness 	= brightness
+		libneopixel.neopixelSetBrightness(self.brightness)
 
 
 	def setPixel (self, pixelId, red, green, blue):

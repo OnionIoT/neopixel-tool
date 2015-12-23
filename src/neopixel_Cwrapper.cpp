@@ -22,9 +22,21 @@ int	neopixelInit (int devAddr, int pin, int length)
 	neopixel 	= new onionNeopixel(devAddr);
 
 	// setup the pin and length
-	neopixel->SetPin(pin);
-	neopixel->SetLength(length);
-	neopixel->Init();
+	status 	=  neopixel->SetPin(pin);
+	status 	|=  neopixel->SetLength(length);
+	status 	|=  neopixel->Init();
+
+	return status;
+}
+
+int neopixelSetBrightness (int brightness)
+{
+	int 	status;
+
+	// set the brightness
+	if (neopixel != NULL) {
+		status 	= neopixel->SetBrightness(brightness);
+	}
 
 	return status;
 }
@@ -35,7 +47,7 @@ int	neopixelSetPixel (int pixelId, int red, int green, int blue)
 
 	// setup the pixel
 	if (neopixel != NULL) {
-		neopixel->SetPixel(pixelId, red, green, blue);
+		status 	= neopixel->SetPixel(pixelId, red, green, blue);
 	}
 
 	return status;
@@ -47,7 +59,7 @@ int	neopixelSetBuffer (int *buf, int size)
 
 	// setup the buffer
 	if (neopixel != NULL) {
-		neopixel->SetBuffer(buf, size);
+		status 	= neopixel->SetBuffer(buf, size);
 	}
 
 	return status;
@@ -59,7 +71,7 @@ int	neopixelShowPixels ()
 
 	// show all pixels
 	if (neopixel != NULL) {
-		neopixel->ShowPixels();
+		status 	= neopixel->ShowPixels();
 	}
 
 	return status;

@@ -11,6 +11,8 @@ extern "C" {
 void 	neopixelSetVerbosity	(int verbosity);
 int		neopixelInit			(int devAddr, int pin, int length);
 
+int 	neopixelSetBrightness 	(int brightness);
+
 int		neopixelSetPixel		(int pixelId, int red, int green, int blue);
 int		neopixelSetBuffer		(int *buf, int size);
 
