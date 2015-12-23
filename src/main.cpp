@@ -46,7 +46,6 @@ int main(int argc, char* argv[])
 	int 		verbose, debug;
 	int 		ch;
 
-	char		*val	= NULL;
 	int 		cmdId, pixelId, pin, length, i, showPixels;
 	int 		red, blue, green;
 
@@ -113,7 +112,6 @@ int main(int argc, char* argv[])
 	
 	//// parse the arguments
 	if (argc > 0) {		
-		val 	= new char[1024];
 		onionPrint(ONION_SEVERITY_DEBUG, ">> argument count is %d\n", argc);
 
 		if (strcmp(NEOPIXEL_APP_CMD_PIXEL, argv[0]) == 0 ) {
@@ -174,6 +172,7 @@ int main(int argc, char* argv[])
 	else if (cmdId == NEOPIXEL_APP_CMD_ID_BUFFER) {
 		onionPrint(ONION_SEVERITY_INFO, "> Writing buffer to strip\n");
 		status 	= neopixelObj->SetBuffer(buffer, length);
+		delete buffer;	// clean-up
 	} 
 
 	if (status == EXIT_FAILURE) {
@@ -185,6 +184,9 @@ int main(int argc, char* argv[])
 		status 	= neopixelObj->ShowPixels();
 	}
 
+
+	// clean-up
+	delete neopixelObj;
 
 	return 0;
 }

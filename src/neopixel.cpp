@@ -151,6 +151,9 @@ int onionNeopixel::_WriteBuffer(int size, int overhead, int startIndex, int* inp
 			 					size
 			 				);
 
+	// clean-up 
+	delete buffer;
+
 	return status;
 }
 
@@ -163,7 +166,7 @@ int onionNeopixel::SetPixel (int pixelId, int red, int green, int blue)
 
 	// create a buffer for the i2c write
 	size	= 5;	// addr, pixel id, 3x colours
-	buffer 	= new uint8_t[5];
+	buffer 	= new uint8_t[size];
 
 	// populate the buffer
 	buffer[0] 	= ARDUINO_DOCK_ADDR_SET_NEOPIXEL_DATAPOINT;	// i2c register address
@@ -179,6 +182,9 @@ int onionNeopixel::SetPixel (int pixelId, int red, int green, int blue)
 			 					buffer, 
 			 					size
 			 				);
+
+	// clean-up 
+	delete buffer;
 
 	return status;
 }
