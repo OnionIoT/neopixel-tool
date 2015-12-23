@@ -29,7 +29,7 @@ class OnionNeopixel:
 		if libneopixel.neopixelInit(self.devAddr, self.pin, self.pixels) == EXIT_SUCCESS:
 			self.init = 1
 
-	def close(self):
+	def __del__(self):
 		""" Destructor: Take care of all cleanup """
 		# make the C call
 		libneopixel.neopixelFree()
