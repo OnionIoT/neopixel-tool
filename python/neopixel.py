@@ -22,7 +22,7 @@ class OnionNeopixel:
 
 		self.init 			= 0
 
-		libneopixel.neopixelSetVerbosity(2)
+		libneopixel.neopixelSetVerbosity(0)
 
 		# initialize the C
 		if libneopixel.neopixelInit(self.devAddr, self.pin, self.pixels) == EXIT_SUCCESS:
@@ -32,6 +32,10 @@ class OnionNeopixel:
 		""" Destructor: Take care of all cleanup """
 		# make the C call
 		libneopixel.neopixelFree()
+
+	def setVerbosity(self, verbosity):
+		""" Set the Onion Debug verbosity """
+		libneopixel.neopixelSetVerbosity(verbosity)
 
 
 	def setPixel (self, pixelId, red, green, blue):
