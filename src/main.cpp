@@ -30,8 +30,17 @@ void usage(const char* progName) {
 	printf("\n");
 
 	printf("Usage:\n");
+	printf("    %s -b <brightness>\n", progName);
+	printf("Set the maximum brightness of the pixels\n");
+	printf("  <brightness>      Brightness value, can be 0-255\n");
+	printf("Notes:\n");
+	printf("  * Can be used in conjunction with any other commands\n");
+	printf("  * Will not take effect until the queued changes are shown (-s option)\n");
+	printf("\n");
+
+	printf("Usage:\n");
 	printf("    %s -s\n", progName);
-	printf("Display any queued colour changes\n");
+	printf("Display any queued colour or brightness changes\n");
 	printf("\n");
 
 	printf("\n");
@@ -59,12 +68,13 @@ int main(int argc, char* argv[])
 	// set the defaults
 	verbose 	= ONION_VERBOSITY_NORMAL;
 	debug 		= 0;
-	cmdId 		= -1;
+	
 	showPixels 	= 0;
+	brightness 	= -1;
+	cmdId 		= NEOPIXEL_APP_CMD_ID_NONE;
 	pin 		= NEOPIXEL_APP_DEFAULT_PIN;
 	length 		= NEOPIXEL_APP_DEFAULT_LENGTH;
-	brightness 	= -1;
-
+	
 
 	//// parse the option arguments
 	while ((ch = getopt(argc, argv, "vqdhisp:l:b:")) != -1) {
@@ -156,7 +166,7 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	if (cmdId == -1 && showPixels == 0 && brightness <= 0) {
+	if (cmdId == NEOPIXEL_APP_CMD_ID_NONE && showPixels == 0 && brightness <= 0) {
 		usage(progname);
 		return EXIT_FAILURE;
 	}
@@ -181,11 +191,12 @@ int main(int argc, char* argv[])
 	} 
 
 	// error checking
-	if (status == EXIT_FAILURE) {
+	if (cmdId != NEOPIXEL_APP_CMD_ID_NONE && status == EXIT_FAILURE) {
 		onionPrint(ONION_SEVERITY_INFO, "> Operation failed!\n");
 	}
 
 
+	//// commands that can be run in conjunction with the above
 	// brightness setup
 	if (brightness > 0) {
 		status 	= neopixelObj->SetBrightness(brightness);
