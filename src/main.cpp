@@ -136,6 +136,11 @@ int main(int argc, char* argv[])
 			if (argc > 1) {
 				pixelId		= atoi(argv[1]);
 
+				// get rid of any leading '0x' in the hex code
+				if (strncmp(argv[2], "0x", 2) == 0) {
+					argv[2] 	+= 2;
+				}
+
 				// parse the pixels
 				sscanf(argv[2], "%2x%2x%2x", &red, &green, &blue);
 				onionPrint(ONION_SEVERITY_DEBUG, ">> Read pixel colours from %s: r = %d, g = %d, b = %d\n", argv[2], red, green, blue);
