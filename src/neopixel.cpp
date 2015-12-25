@@ -135,6 +135,7 @@ int onionNeopixel::SetBuffer (int *buf, int size)
 	// write the buffer via i2c
 	//	note: maximum transmission size is 32 bytes, 
 	//		so if buffer is for more than 9 pixels, will need multiple transmissions
+	status = EXIT_SUCCESS;
 	while (size > 0) {
 		// find transmission size
 		if (size/3 > NEOPIXEL_MAX_TRANSMISSION_PIXELS ) {
@@ -146,7 +147,7 @@ int onionNeopixel::SetBuffer (int *buf, int size)
 		}
 
 		// perform the transmission
-		_WriteBuffer(bufferSize, overhead, startIndex, buf);
+		status |= _WriteBuffer(bufferSize, overhead, startIndex, buf);
 
 		// adjust the overall size of the input buffer based on this transmission
 		size 		-= bufferSize - overhead;
